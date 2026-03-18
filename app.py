@@ -66,7 +66,7 @@ p {
 
 # ---------------- HEADER ----------------
 st.markdown("""
-<h1>🧠 AI Stress Coping Assistant</h1>
+<h1> AI Stress Coping Assistant</h1>
 <p>Understand your stress. Reset your mind. Take control.</p>
 """, unsafe_allow_html=True)
 
