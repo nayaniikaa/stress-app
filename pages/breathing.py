@@ -15,7 +15,7 @@ if "running" not in st.session_state:
     st.session_state.running = False
 
 
-# START
+# START SCREEN
 if not st.session_state.running:
     st.markdown(f"<h3 style='text-align:center;'>Round {st.session_state.round}</h3>", unsafe_allow_html=True)
 
@@ -24,28 +24,43 @@ if not st.session_state.running:
         st.rerun()
 
 
-# RUN TIMER
-else:
+# TIMER FUNCTION
+def show_circle_timer(phase, duration):
     placeholder = st.empty()
 
-    phases = [
-        ("Inhale", 4),
-        ("Hold", 4),
-        ("Exhale", 6)
-    ]
+    for i in range(duration, 0, -1):
+        progress = int(((duration - i) / duration) * 360)
 
-    for phase, duration in phases:
-        for i in range(duration, 0, -1):
-            placeholder.markdown(f"""
-            <div style="text-align:center">
-                <h2>{phase}</h2>
-                <h1>{i}</h1>
+        placeholder.markdown(f"""
+        <div style="text-align:center">
+            <h2>{phase}</h2>
+            <div style="
+                width:180px;
+                height:180px;
+                border-radius:50%;
+                margin:auto;
+                background:
+                    conic-gradient(#38bdf8 {progress}deg, #1e293b {progress}deg);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:28px;
+                color:white;
+            ">
+                {i}
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
-            time.sleep(1)
+        time.sleep(1)
 
-    # ROUND COMPLETE
+
+# RUN
+else:
+    show_circle_timer("Inhale", 4)
+    show_circle_timer("Hold", 4)
+    show_circle_timer("Exhale", 6)
+
     st.session_state.running = False
 
     current = st.session_state.round
