@@ -1,12 +1,13 @@
 import streamlit as st
 
 # ---------------- PAGE CONFIG ----------------
-st.set_page_config(
-    page_title="Stress Support Assistant",
-    layout="centered",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
+st.markdown("""
+<style>
+[data-testid="stSidebar"] {display: none;}
+</style>
+""", unsafe_allow_html=True)
 # ---------------- GLOBAL OCEAN UI ----------------
 st.markdown("""
 <style>
