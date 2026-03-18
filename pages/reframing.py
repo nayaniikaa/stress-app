@@ -35,11 +35,11 @@ if st.session_state.r_step >= len(questions):
 st.markdown("---")
 c1,c2,c3,c4 = st.columns(4)
 
-if c1.button("⚡", use_container_width=True):
+if c1.button("Action", use_container_width=True):
     st.switch_page("pages/action_reset.py")
-if c2.button("🌬️", use_container_width=True):
+if c2.button("Breathe", use_container_width=True):
     st.switch_page("pages/breathing.py")
-if c3.button("🌍", use_container_width=True):
+if c3.button("Grounding", use_container_width=True):
     st.switch_page("pages/grounding.py")
-if c4.button("🧠", use_container_width=True):
+if c4.button("Reframing", use_container_width=True):
     pass
