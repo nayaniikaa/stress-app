@@ -7,21 +7,29 @@ st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {display:none;}
+
 body {
     background: linear-gradient(135deg, #e0f2fe, #f0f9ff, #ecfeff);
 }
-.block-container {padding:2rem;}
-h1, h2 {text-align:center;}
+
+.block-container {
+    padding:2rem;
+}
+
+h1, h2 {
+    text-align:center;
+}
 </style>
 """, unsafe_allow_html=True)
 
 st.title("🌬️ Breathe")
 
+# SETTINGS
 INHALE, HOLD, EXHALE = 4, 4, 6
 TOTAL_CYCLES = 5
 TOTAL_TIME = (INHALE + HOLD + EXHALE) * TOTAL_CYCLES
 
-# SESSION
+# SESSION STATE
 if "running" not in st.session_state:
     st.session_state.running = False
 if "stop" not in st.session_state:
@@ -39,15 +47,21 @@ if col2.button("Stop", use_container_width=True):
     st.session_state.stop = True
     st.session_state.running = False
 
-# UI
+# UI HOLDERS
 circle = st.empty()
-text = st.empty()
+text_container = st.container()
 progress = st.progress(0)
 
-# 🔥 BALL WITH COUNTDOWN INSIDE
+# 🔥 FIXED SPACE CIRCLE (NO LAYOUT SHIFT)
 def draw_circle(size, color, number):
     circle.markdown(f"""
-    <div style='display:flex;justify-content:center;align-items:center;'>
+    <div style='
+        height:260px;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        position:relative;
+    '>
         <div style='
             width:{size}px;
             height:{size}px;
@@ -59,13 +73,14 @@ def draw_circle(size, color, number):
             font-size:40px;
             color:white;
             font-weight:bold;
+            position:absolute;
         '>
             {number}
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-# 🔥 SMOOTH SIZE CHANGE (FAKE ANIMATION)
+# 🔥 ANIMATION FUNCTION
 def animate_phase(start_size, end_size, seconds, label, color, elapsed):
     step = (end_size - start_size) / seconds
 
@@ -76,7 +91,10 @@ def animate_phase(start_size, end_size, seconds, label, color, elapsed):
         size = start_size + step * (seconds - i)
 
         draw_circle(int(size), color, i)
-        text.markdown(f"### {label}")
+
+        # 👇 STABLE TEXT (no jumping)
+        with text_container:
+            st.markdown(f"### {label}")
 
         time.sleep(1)
 
@@ -86,7 +104,7 @@ def animate_phase(start_size, end_size, seconds, label, color, elapsed):
     return True, elapsed
 
 
-# MAIN FLOW
+# 🔥 MAIN FLOW
 if st.session_state.running:
     elapsed = 0
 
@@ -96,7 +114,7 @@ if st.session_state.running:
         ok, elapsed = animate_phase(120, 220, INHALE, "Inhale", "#38bdf8", elapsed)
         if not ok: break
 
-        # HOLD (stay big)
+        # HOLD (stay)
         ok, elapsed = animate_phase(220, 220, HOLD, "Hold", "#0ea5e9", elapsed)
         if not ok: break
 
@@ -111,8 +129,9 @@ if st.session_state.running:
         draw_circle(150, "#22c55e", "✓")
         st.success("🌿 Done.")
 
-# 🔻 NAV
+# 🔻 BOTTOM NAV
 st.markdown("---")
+
 c1, c2, c3, c4 = st.columns(4)
 
 if c1.button("⚡", use_container_width=True):
