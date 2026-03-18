@@ -2,6 +2,11 @@ import streamlit as st
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
+st.markdown("""
+<style>
+[data-testid="stSidebar"] {display: none;}
+</style>
+""", unsafe_allow_html=True)
 # 🌊 SAME DESIGN
 st.markdown("""
 <style>
@@ -57,3 +62,16 @@ else:
     if st.button("🏠 Back to Home", use_container_width=True):
         st.session_state.clear()
         st.switch_page("app.py")
+        col1, col2, col3, col4 = st.columns(4)
+
+if col1.button("⚡ Reset", use_container_width=True):
+    st.switch_page("action reset.py")
+
+if col2.button("🌬️ Breathe", use_container_width=True):
+    st.switch_page("breathing.py")
+
+if col3.button("🌍 Ground", use_container_width=True):
+    st.switch_page("grounding.py")
+
+if col4.button("🧠 Reframe", use_container_width=True):
+    st.switch_page("reframing.py")
