@@ -1,9 +1,8 @@
 import streamlit as st
-import time
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
-# 🌊 OCEAN STYLE
+# 🌊 SAME DESIGN
 st.markdown("""
 <style>
 body {
@@ -14,61 +13,46 @@ body {
     padding: 2rem;
     border-radius: 18px;
 }
-h1, h2 {
+h1, h2, h3 {
     text-align: center;
     color: #0f172a;
+}
+p {
+    text-align: center;
+    color: #334155;
 }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🌬️ Breathing Exercise")
+st.title("🧘 Grounding Exercise")
 
-# SETTINGS
-CYCLES = 6
-INHALE = 10
-HOLD = 5
-EXHALE = 10
+# STEPS
+steps = [
+    "Look around and notice **5 things you can see** 👀",
+    "Now notice **4 things you can feel** 🤲",
+    "Listen for **3 things you can hear** 👂",
+    "Notice **2 things you can smell** 👃",
+    "Focus on **1 thing you can taste or feel inside** 🌿"
+]
 
-# SESSION STATE
-if "running" not in st.session_state:
-    st.session_state.running = False
+# SESSION
+if "g_step" not in st.session_state:
+    st.session_state.g_step = 0
 
 
-# START BUTTON
-if not st.session_state.running:
-    st.write("### Take a deep breath. Follow the rhythm.")
+# FLOW
+if st.session_state.g_step < len(steps):
+    st.markdown(f"### Step {st.session_state.g_step + 1}")
 
-    if st.button("Start", use_container_width=True):
-        st.session_state.running = True
+    st.write(steps[st.session_state.g_step])
+
+    if st.button("Done", use_container_width=True):
+        st.session_state.g_step += 1
         st.rerun()
 
-
-# TIMER FUNCTION
-def run_phase(text, seconds):
-    placeholder = st.empty()
-
-    for i in range(seconds, 0, -1):
-        placeholder.markdown(f"""
-        <div style='text-align:center'>
-            <h2>{text}</h2>
-            <h1>{i}</h1>
-        </div>
-        """, unsafe_allow_html=True)
-        time.sleep(1)
-
-
-# MAIN FLOW (CONTINUOUS)
-if st.session_state.running:
-
-    for cycle in range(CYCLES):
-        run_phase("Inhale", INHALE)
-        run_phase("Hold", HOLD)
-        run_phase("Exhale", EXHALE)
-
-    st.session_state.running = False
-
-    st.balloons()
-    st.success("🌿 You completed the breathing session.")
+# COMPLETION
+else:
+    st.success("🌿 You are now more grounded and present.")
 
     if st.button("🏠 Back to Home", use_container_width=True):
         st.session_state.clear()
