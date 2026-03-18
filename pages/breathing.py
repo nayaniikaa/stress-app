@@ -135,13 +135,13 @@ st.markdown("---")
 c1, c2, c3, c4 = st.columns(4)
 
 if c1.button("Action", use_container_width=True):
-    st.switch_page("page/action_reset.py")
+    st.switch_page("pages/action_reset.py")
 
 if c2.button("Breathe", use_container_width=True):
     pass
 
 if c3.button("Grounding", use_container_width=True):
-    st.switch_page("page/grounding.py")
+    st.switch_page("pages/grounding.py")
 
 if c4.button("Reframing", use_container_width=True):
-    st.switch_page("page/reframing.py")
+    st.switch_page("pages/reframing.py")
