@@ -21,7 +21,7 @@ h1, h2 {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🌬️ Breathing Exercise")
+st.title(" Breathing Exercise")
 
 # SETTINGS
 INHALE = 10
