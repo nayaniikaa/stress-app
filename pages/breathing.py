@@ -24,9 +24,9 @@ h1, h2 {
 st.title("🌬️ Breathing Exercise")
 
 # SETTINGS (60 sec total approx)
-INHALE = 4
-HOLD = 2
-EXHALE = 4
+INHALE = 10
+HOLD = 5
+EXHALE = 10
 TOTAL_CYCLES = 6   # 6 cycles = ~60 seconds
 
 # SESSION STATE
