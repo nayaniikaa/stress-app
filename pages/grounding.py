@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("🧠 Grounding Exercise")
+st.title("Grounding Exercise")
 
 steps = [
     ("5 things you can see", 5),
