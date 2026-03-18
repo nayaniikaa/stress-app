@@ -1,188 +1,85 @@
 import streamlit as st
+import time
 
-# ---------------- PAGE CONFIG ----------------
-st.set_page_config(
-    page_title="AI Stress Assistant",
-    layout="centered",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
-# ---------------- CUSTOM CSS ----------------
-st.markdown("""
-<style>
+st.markdown("<h1 style='text-align:center;'>🌬️ Breathe</h1>", unsafe_allow_html=True)
 
-/* Animated background */
-body {
-    background: linear-gradient(-45deg, #0f172a, #1e293b, #020617, #1e293b);
-    background-size: 400% 400%;
-    animation: gradientMove 12s ease infinite;
-}
+TOTAL_ROUNDS = 5
 
-@keyframes gradientMove {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-}
+# SESSION STATE
+if "round" not in st.session_state:
+    st.session_state.round = 1
 
-/* Glass card */
-.block-container {
-    background: rgba(15, 23, 42, 0.6);
-    padding: 2rem;
-    border-radius: 18px;
-    backdrop-filter: blur(12px);
-}
+if "phase" not in st.session_state:
+    st.session_state.phase = "start"
 
-/* Buttons */
-.stButton>button {
-    width: 100%;
-    border-radius: 14px;
-    padding: 12px;
-    font-size: 16px;
-    background: rgba(30, 41, 59, 0.8);
-    color: white;
-    border: 1px solid #334155;
-    transition: all 0.25s ease;
-}
 
-.stButton>button:hover {
-    transform: scale(1.05);
-    background: #334155;
-    border: 1px solid #64748b;
-}
+# START SCREEN
+if st.session_state.phase == "start":
+    st.markdown(f"<h3 style='text-align:center;'>Round {st.session_state.round}</h3>", unsafe_allow_html=True)
 
-/* Headings */
-h1, h2, h3 {
-    text-align: center;
-    color: white;
-}
+    if st.button("Start", use_container_width=True):
+        st.session_state.phase = "running"
+        st.rerun()
 
-p {
-    text-align: center;
-    color: #94a3b8;
-}
 
-</style>
-""", unsafe_allow_html=True)
+# BREATHING LOOP
+elif st.session_state.phase == "running":
+    placeholder = st.empty()
 
-# ---------------- HEADER ----------------
-st.markdown("""
-<h1>🧠 AI Stress Coping Assistant</h1>
-<p>Understand your stress. Reset your mind. Take control.</p>
-""", unsafe_allow_html=True)
-
-# ---------------- SESSION ----------------
-if "step" not in st.session_state:
-    st.session_state.step = 1
-
-# ---------------- PROGRESS BAR ----------------
-total_steps = 5
-progress = st.session_state.step / total_steps
-st.progress(progress)
-
-# ---------------- LOGIC ----------------
-def choose_method(body, state, intensity):
-    if body == "chest" or intensity == "severe":
-        return "breathing"
-    elif state == "Overthinking" or body == "head":
-        return "grounding"
-    elif state == "Low mood":
-        return "reframing"
-    else:
-        return "action"
-
-# ---------------- STEP 1 ----------------
-if st.session_state.step == 1:
-    st.markdown("### How are you feeling right now?")
-
-    emotions = [
-        "Stressed", "Anxious", "Overwhelmed", "Sad", "Angry",
-        "Tired", "Confused", "Panicking", "Low", "Frustrated"
+    # (phase, duration, start_scale, end_scale)
+    phases = [
+        ("Inhale", 4, 1.0, 1.4),
+        ("Hold", 4, 1.4, 1.4),
+        ("Exhale", 6, 1.4, 1.0)
     ]
 
-    cols = st.columns(2)
+    for phase, duration, start_scale, end_scale in phases:
+        for i in range(duration):
+            progress = i / duration
+            scale = start_scale + (end_scale - start_scale) * progress
 
-    for i, emotion in enumerate(emotions):
-        if cols[i % 2].button(emotion, use_container_width=True):
-            st.session_state.feeling = emotion
-            st.session_state.step = 2
-            st.toast("Got it 👍")
+            placeholder.markdown(f"""
+            <div style="text-align:center">
+                <h2>{phase}</h2>
+                <div style="
+                    width:180px;
+                    height:180px;
+                    margin:auto;
+                    border-radius:50%;
+                    background: radial-gradient(circle, #38bdf8, #0ea5e9);
+                    transform: scale({scale});
+                    transition: all 0.5s ease;
+                "></div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            time.sleep(1)
+
+    st.session_state.phase = "done"
+    st.rerun()
+
+
+# AFTER ROUND
+elif st.session_state.phase == "done":
+    current = st.session_state.round
+    remaining = TOTAL_ROUNDS - current
+
+    st.success(f"✅ Round {current} complete")
+
+    if remaining > 0:
+        st.info(f"{remaining} more to go")
+
+        if st.button(f"Next Round ({current + 1})", use_container_width=True):
+            st.session_state.round += 1
+            st.session_state.phase = "start"
             st.rerun()
-
-# ---------------- STEP 2 ----------------
-elif st.session_state.step == 2:
-    st.markdown("### Where do you feel it in your body?")
-
-    options = ["Chest", "Head", "Shoulders", "Stomach"]
-    cols = st.columns(2)
-
-    for i, opt in enumerate(options):
-        if cols[i % 2].button(opt, use_container_width=True):
-            st.session_state.body = opt.lower()
-            st.session_state.step = 3
-            st.toast("Noted ✔")
-            st.rerun()
-
-# ---------------- STEP 3 ----------------
-elif st.session_state.step == 3:
-    st.markdown("### How intense is it?")
-
-    options = ["Mild", "Moderate", "Severe"]
-
-    for opt in options:
-        if st.button(opt, use_container_width=True):
-            st.session_state.intensity = opt.lower()
-            st.session_state.step = 4
-            st.toast("Okay 👍")
-            st.rerun()
-
-# ---------------- STEP 4 ----------------
-elif st.session_state.step == 4:
-    st.markdown("### What best describes your state?")
-
-    states = ["Overthinking", "Tired", "Panicking", "Low mood", "Restless"]
-
-    for s in states:
-        if st.button(s, use_container_width=True):
-            st.session_state.state = s
-            st.session_state.step = 5
-            st.toast("Almost there 🔥")
-            st.rerun()
-
-# ---------------- STEP 5 ----------------
-elif st.session_state.step == 5:
-    method = choose_method(
-        st.session_state.body,
-        st.session_state.state,
-        st.session_state.intensity
-    )
-
-    st.markdown("### 🧾 Your Analysis")
-
-    st.info(
-        f"You are feeling **{st.session_state.feeling}**, "
-        f"with **{st.session_state.intensity} intensity**, "
-        f"showing as **{st.session_state.state}**, "
-        f"and tension in your **{st.session_state.body}**."
-    )
-
-    st.divider()
-
-    if method == "breathing":
-        st.success("Best approach: Calm your body with breathing.")
-        if st.button("Start Breathing Exercise", use_container_width=True):
-            st.switch_page("pages/breathing.py")
-
-    elif method == "grounding":
-        st.success("Best approach: Ground your senses.")
-        if st.button("Start Grounding Exercise", use_container_width=True):
-            st.switch_page("pages/grounding.py")
-
-    elif method == "reframing":
-        st.success("Best approach: Reframe your thoughts.")
-        if st.button("Start Thought Reframing", use_container_width=True):
-            st.switch_page("pages/reframing.py")
 
     else:
-        st.success("Best approach: Reset your state with action.")
-        if st.button("Start Action Reset", use_container_width=True):
-            st.switch_page("pages/action_reset.py")
+        st.balloons()
+        st.success("🎉 You completed all 5 rounds!")
+
+        if st.button("🏠 Return Home", use_container_width=True):
+            st.session_state.clear()
+            st.switch_page("app.py")
