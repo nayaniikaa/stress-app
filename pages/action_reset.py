@@ -3,7 +3,7 @@ import time
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
-# ❌ REMOVE SIDEBAR
+# ❌ REMOVE SIDEBAR + UI
 st.markdown("""
 <style>
 [data-testid="stSidebar"] {display:none;}
@@ -19,24 +19,31 @@ h1, h2 {
 </style>
 """, unsafe_allow_html=True)
 
-st.title(" Quick Reset")
+st.title("⚡ Quick Reset")
+
+# 🔄 FORCE CLEAN START (fixes progress issue)
+if "initialized" not in st.session_state:
+    st.session_state.step = 0
+    st.session_state.task_done = False
+    st.session_state.initialized = True
+
+# OPTIONAL RESET BUTTON
+if st.button("🔄 Reset Session"):
+    st.session_state.clear()
+    st.rerun()
 
 tasks = [
-    ("Stretch Arms",10),
-    ("Neck Roll",8),
-    ("Shoulder Roll",10),
-    ("Breathe",10),
-    ("Hydrate",0)
+    ("Stretch Arms", 10),
+    ("Neck Roll", 8),
+    ("Shoulder Roll", 10),
+    ("Breathe", 10),
+    ("Hydrate", 0)
 ]
 
-# SESSION STATE
-if "step" not in st.session_state:
-    st.session_state.step = 0
-
-# PROGRESS (starts clean at 0)
+# ✅ PROGRESS (correct logic)
 st.progress(st.session_state.step / len(tasks))
 
-# TASK FLOW
+# ---------------- TASK FLOW ----------------
 if st.session_state.step < len(tasks):
     title, duration = tasks[st.session_state.step]
 
@@ -46,7 +53,7 @@ if st.session_state.step < len(tasks):
     if duration > 0:
         if st.button("Start", use_container_width=True):
 
-            placeholder = st.empty()  # 👈 fixes stacking
+            placeholder = st.empty()
 
             for i in range(duration, 0, -1):
                 placeholder.markdown(f"""
@@ -62,17 +69,26 @@ if st.session_state.step < len(tasks):
             </div>
             """, unsafe_allow_html=True)
 
+            # ✅ Mark task complete
+            st.session_state.task_done = True
+
     # NON-TIMER TASK
     else:
         if st.button("Done", use_container_width=True):
             st.success("💧 Hydrated")
+            st.session_state.task_done = True
 
-    # NEXT BUTTON
-    if st.button("Next →", use_container_width=True):
+    # ✅ NEXT BUTTON (locked until done)
+    if st.button(
+        "Next →",
+        use_container_width=True,
+        disabled=not st.session_state.task_done
+    ):
         st.session_state.step += 1
+        st.session_state.task_done = False
         st.rerun()
 
-# COMPLETION
+# ---------------- COMPLETION ----------------
 else:
     st.success("🔥 Reset done")
 
