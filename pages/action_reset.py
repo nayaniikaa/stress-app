@@ -19,7 +19,7 @@ h1, h2 {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("⚡ Quick Reset")
+st.title(" Quick Reset")
 
 # 🔄 FORCE CLEAN START (fixes progress issue)
 if "initialized" not in st.session_state:
