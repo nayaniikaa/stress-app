@@ -3,7 +3,7 @@ import time
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
-st.markdown("<h1 style='text-align:center;'>🌬️ Breathing Exercise</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center;'> Breathing Exercise</h1>", unsafe_allow_html=True)
 
 TOTAL_ROUNDS = 5
 
