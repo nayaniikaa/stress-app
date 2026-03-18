@@ -3,64 +3,58 @@ import time
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
-st.markdown("<h1 style='text-align:center;'> Reset Your State</h1>", unsafe_allow_html=True)
+st.markdown("""
+<style>
+[data-testid="stSidebar"] {display:none;}
+</style>
+""", unsafe_allow_html=True)
 
-# TASKS (title, instruction, duration)
+st.title("⚡ Quick Reset")
+
 tasks = [
-    ("Stretch: Arms Up", "Raise both arms above your head and stretch upward.", 10),
-    ("Stretch: Neck Roll", "Slowly roll your neck clockwise.", 8),
-    ("Stretch: Shoulder Roll", "Roll your shoulders backward slowly.", 10),
-    ("Stretch: Forward Bend", "Bend forward and let your arms hang loose.", 10),
-
-    ("Breathing Reset", "Take slow deep breaths.", 15),
-
-    ("Hydrate", "Take a sip of water slowly.", 0),
-
-    ("Vision Break", "Look at something far away and relax your eyes.", 10),
-
-    ("Posture Reset", "Sit straight and relax your shoulders.", 10)
+    ("Stretch Arms",10),
+    ("Neck Roll",8),
+    ("Shoulder Roll",10),
+    ("Breathe",10),
+    ("Hydrate",0)
 ]
 
-# SESSION STATE
-if "task_step" not in st.session_state:
-    st.session_state.task_step = 0
+if "step" not in st.session_state:
+    st.session_state.step = 0
 
-# PROGRESS BAR
-st.progress((st.session_state.task_step ) / len(tasks))
+st.progress(st.session_state.step / len(tasks))
 
-# TASK FLOW
-if st.session_state.task_step < len(tasks):
-    title, instruction, duration = tasks[st.session_state.task_step]
+if st.session_state.step < len(tasks):
+    title, duration = tasks[st.session_state.step]
 
     st.subheader(title)
-    st.write(instruction)
 
-    # TIMER TASKS
     if duration > 0:
-        if st.button("Start", use_container_width=True):
-            placeholder = st.empty()
-
-            for i in range(duration, 0, -1):
-                placeholder.markdown(f"### ⏳ {i} seconds")
+        if st.button("Start"):
+            for i in range(duration,0,-1):
+                st.write(i)
                 time.sleep(1)
-
-            st.success("✅ Done!")
-
-    # NON-TIMER TASK (water)
+            st.success("Done")
     else:
-        if st.button("Done", use_container_width=True):
-            st.success("💧 Good. Stay hydrated.")
+        if st.button("Done"):
+            st.success("Hydrated")
 
-    # NEXT BUTTON
-    if st.button("Next →", use_container_width=True):
-        st.session_state.task_step += 1
+    if st.button("Next"):
+        st.session_state.step += 1
         st.rerun()
 
-# COMPLETION
 else:
-    st.balloons()
-    st.success("🔥 You reset your state. Great job!")
+    st.success("🔥 Reset done")
 
-    if st.button("🏠 Back to Home", use_container_width=True):
-        st.session_state.clear()
-        st.switch_page("app.py")
+# NAV
+st.markdown("---")
+c1,c2,c3,c4 = st.columns(4)
+
+if c1.button("⚡", use_container_width=True):
+    pass
+if c2.button("🌬️", use_container_width=True):
+    st.switch_page("pages/breathing.py")
+if c3.button("🌍", use_container_width=True):
+    st.switch_page("pages/grounding.py")
+if c4.button("🧠", use_container_width=True):
+    st.switch_page("pages/reframing.py")
