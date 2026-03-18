@@ -210,3 +210,16 @@ elif st.session_state.step == 5:
     if st.button("🔄 Start New Session", use_container_width=True):
         st.session_state.clear()
         st.rerun()
+col1, col2, col3, col4 = st.columns(4)
+
+if col1.button("⚡ Reset", use_container_width=True):
+    st.switch_page("action reset.py")
+
+if col2.button("🌬️ Breathe", use_container_width=True):
+    st.switch_page("breathing.py")
+
+if col3.button("🌍 Ground", use_container_width=True):
+    st.switch_page("grounding.py")
+
+if col4.button("🧠 Reframe", use_container_width=True):
+    st.switch_page("reframing.py")
