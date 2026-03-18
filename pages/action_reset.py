@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-
+st.progress((st.session_state.task_step + 1) / len(tasks))
 st.title(" Reset Your State")
 
 tasks = [
@@ -50,3 +50,4 @@ if st.session_state.task_step < len(tasks):
 
 else:
     st.success("🔥 You reset your state. Great job!")
+    st.balloons()
