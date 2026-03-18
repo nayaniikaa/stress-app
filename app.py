@@ -75,7 +75,7 @@ p, div {
 
 # ---------------- HEADER ----------------
 st.markdown("""
-<h1>🧠 Stress Support Assistant</h1>
+<h1> Stress Support </h1>
 <p style='text-align:center;'>Take a moment. Understand what you're feeling.</p>
 """, unsafe_allow_html=True)
 
@@ -213,14 +213,14 @@ st.markdown("---")
 
 col1, col2, col3, col4 = st.columns(4)
 
-if col1.button("⚡", use_container_width=True):
+if col1.button("Action", use_container_width=True):
     st.switch_page("pages/action_reset.py")
 
-if col2.button("🌬️", use_container_width=True):
+if col2.button("Breathe", use_container_width=True):
     st.switch_page("pages/breathing.py")
 
-if col3.button("🌍", use_container_width=True):
+if col3.button("Grounding", use_container_width=True):
     st.switch_page("pages/grounding.py")
 
-if col4.button("🧠", use_container_width=True):
+if col4.button("Reframing", use_container_width=True):
     st.switch_page("pages/reframing.py")
