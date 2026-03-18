@@ -7,41 +7,39 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ---------------- CALM UI CSS ----------------
+# ---------------- GLOBAL OCEAN UI ----------------
 st.markdown("""
 <style>
 
-/* 🌿 Soft gradient background */
+/* 🌊 Ocean gradient background */
 body {
-    background: linear-gradient(135deg, #e0f7fa, #f0fdf4, #eef2ff);
+    background: linear-gradient(135deg, #dbeafe, #e0f2fe, #f0f9ff);
 }
 
 /* 🧊 Card container */
 .block-container {
     background: white;
     padding: 2rem;
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* 🧠 Title */
-h1 {
+/* 🧠 Titles */
+h1, h2, h3 {
     text-align: center;
-    color: #1e3a8a;
-    font-weight: 600;
+    color: #0f172a;
 }
 
-/* ✨ Subtitle */
-p {
-    text-align: center;
-    color: #64748b;
+/* ✨ Text */
+p, div {
+    color: #334155;
     font-size: 16px;
 }
 
 /* 🎯 Buttons */
 .stButton>button {
     width: 100%;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 12px;
     font-size: 15px;
     background: #e0f2fe;
@@ -50,7 +48,7 @@ p {
     transition: all 0.2s ease;
 }
 
-/* Hover effect */
+/* Hover */
 .stButton>button:hover {
     background: #bae6fd;
     transform: scale(1.03);
@@ -58,7 +56,7 @@ p {
 
 /* Progress bar */
 .stProgress > div > div {
-    background-color: #38bdf8;
+    background-color: #0284c7;
 }
 
 </style>
@@ -74,9 +72,9 @@ st.markdown("""
 if "step" not in st.session_state:
     st.session_state.step = 1
 
-# ---------------- PROGRESS ----------------
+# ---------------- PROGRESS (FIXED) ----------------
 total_steps = 5
-progress = st.session_state.step / total_steps
+progress = (st.session_state.step - 1) / total_steps
 st.progress(progress)
 
 # ---------------- LOGIC ----------------
@@ -164,26 +162,22 @@ elif st.session_state.step == 5:
     st.divider()
 
     if method == "breathing":
-        st.success("Best approach: Calm your body with breathing.")
-        if st.button("Start Breathing Exercise", use_container_width=True):
+        if st.button("🌬️ Start Breathing Exercise", use_container_width=True):
             st.switch_page("pages/breathing.py")
 
     elif method == "grounding":
-        st.success("Best approach: Ground your senses.")
-        if st.button("Start Grounding Exercise", use_container_width=True):
+        if st.button("🧘 Start Grounding Exercise", use_container_width=True):
             st.switch_page("pages/grounding.py")
 
     elif method == "reframing":
-        st.success("Best approach: Reframe your thoughts.")
-        if st.button("Start Thought Reframing", use_container_width=True):
+        if st.button("🧠 Start Thought Reframing", use_container_width=True):
             st.switch_page("pages/reframing.py")
 
     else:
-        st.success("Best approach: Reset your state with action.")
-        if st.button("Start Action Reset", use_container_width=True):
+        if st.button("⚡ Start Action Reset", use_container_width=True):
             st.switch_page("pages/action_reset.py")
 
-    # 🔄 Restart option
+    # RESET BUTTON
     if st.button("🔄 Start New Session", use_container_width=True):
         st.session_state.clear()
         st.rerun()
