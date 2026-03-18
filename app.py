@@ -72,19 +72,23 @@ st.markdown("""
 if "step" not in st.session_state:
     st.session_state.step = 1
 
-# ---------------- PROGRESS (FIXED) ----------------
+# ---------------- PROGRESS ----------------
 total_steps = 5
 progress = (st.session_state.step - 1) / total_steps
 st.progress(progress)
 
 # ---------------- LOGIC ----------------
 def choose_method(body, state, intensity):
-    if body == "chest" or intensity == "severe":
+
+    if "Chest (tight/heavy)" in body or intensity == "severe":
         return "breathing"
-    elif state == "Overthinking" or body == "head":
+
+    elif "Racing thoughts" in state or "Head (pressure)" in body:
         return "grounding"
-    elif state == "Low mood":
+
+    elif "Low energy / drained" in state:
         return "reframing"
+
     else:
         return "action"
 
@@ -93,30 +97,42 @@ if st.session_state.step == 1:
     st.write("### How are you feeling right now?")
 
     emotions = [
-        "Stressed", "Anxious", "Overwhelmed", "Sad", "Angry",
-        "Tired", "Confused", "Panicking", "Low", "Frustrated"
+        "Stressed", "Anxious", "Overwhelmed", "Sad",
+        "Angry", "Frustrated", "Confused", "Not sure"
     ]
 
-    cols = st.columns(2)
+    selected = st.multiselect("Select all that apply:", emotions)
 
-    for i, emotion in enumerate(emotions):
-        if cols[i % 2].button(emotion, use_container_width=True):
-            st.session_state.feeling = emotion
+    if st.button("Continue", use_container_width=True):
+        if selected:
+            st.session_state.feeling = selected
             st.session_state.step = 2
             st.rerun()
+        else:
+            st.warning("Pick at least one option")
 
 # ---------------- STEP 2 ----------------
 elif st.session_state.step == 2:
     st.write("### Where do you feel it in your body?")
 
-    options = ["Chest", "Head", "Shoulders", "Stomach"]
-    cols = st.columns(2)
+    options = [
+        "Chest (tight/heavy)",
+        "Head (pressure)",
+        "Shoulders & Neck (tension)",
+        "Stomach (uneasy)",
+        "Jaw (clenched)",
+        "Whole body"
+    ]
 
-    for i, opt in enumerate(options):
-        if cols[i % 2].button(opt, use_container_width=True):
-            st.session_state.body = opt.lower()
+    selected = st.multiselect("Select all that apply:", options)
+
+    if st.button("Continue", use_container_width=True):
+        if selected:
+            st.session_state.body = selected
             st.session_state.step = 3
             st.rerun()
+        else:
+            st.warning("Pick at least one option")
 
 # ---------------- STEP 3 ----------------
 elif st.session_state.step == 3:
@@ -132,18 +148,30 @@ elif st.session_state.step == 3:
 
 # ---------------- STEP 4 ----------------
 elif st.session_state.step == 4:
-    st.write("### What best describes your state?")
+    st.write("### What’s happening right now?")
 
-    states = ["Overthinking", "Tired", "Panicking", "Low mood", "Restless"]
+    states = [
+        "Racing thoughts",
+        "Constant worry",
+        "Feeling on edge",
+        "Low energy / drained",
+        "Can’t focus",
+        "Panic / losing control"
+    ]
 
-    for s in states:
-        if st.button(s, use_container_width=True):
-            st.session_state.state = s
+    selected = st.multiselect("Select all that apply:", states)
+
+    if st.button("Continue", use_container_width=True):
+        if selected:
+            st.session_state.state = selected
             st.session_state.step = 5
             st.rerun()
+        else:
+            st.warning("Pick at least one option")
 
 # ---------------- STEP 5 ----------------
 elif st.session_state.step == 5:
+
     method = choose_method(
         st.session_state.body,
         st.session_state.state,
@@ -153,10 +181,10 @@ elif st.session_state.step == 5:
     st.write("### 🧾 Your Analysis")
 
     st.info(
-        f"You are feeling **{st.session_state.feeling}**, "
+        f"You are feeling **{', '.join(st.session_state.feeling)}**, "
         f"with **{st.session_state.intensity} intensity**, "
-        f"showing as **{st.session_state.state}**, "
-        f"and tension in your **{st.session_state.body}**."
+        f"experiencing **{', '.join(st.session_state.state)}**, "
+        f"and tension in your **{', '.join(st.session_state.body)}**."
     )
 
     st.divider()
@@ -177,7 +205,7 @@ elif st.session_state.step == 5:
         if st.button("⚡ Start Action Reset", use_container_width=True):
             st.switch_page("pages/action_reset.py")
 
-    # RESET BUTTON
+    # RESET
     if st.button("🔄 Start New Session", use_container_width=True):
         st.session_state.clear()
         st.rerun()
