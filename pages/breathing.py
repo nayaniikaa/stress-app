@@ -49,10 +49,10 @@ if col2.button("Stop", use_container_width=True):
 
 # UI HOLDERS
 circle = st.empty()
-text_container = st.container()
+text_placeholder = st.empty()   # ✅ FIXED (no stacking)
 progress = st.progress(0)
 
-# 🔥 FIXED SPACE CIRCLE (NO LAYOUT SHIFT)
+# 🔥 FIXED SPACE (NO JUMPING)
 def draw_circle(size, color, number):
     circle.markdown(f"""
     <div style='
@@ -80,7 +80,7 @@ def draw_circle(size, color, number):
     </div>
     """, unsafe_allow_html=True)
 
-# 🔥 ANIMATION FUNCTION
+# 🔥 ANIMATION
 def animate_phase(start_size, end_size, seconds, label, color, elapsed):
     step = (end_size - start_size) / seconds
 
@@ -92,9 +92,8 @@ def animate_phase(start_size, end_size, seconds, label, color, elapsed):
 
         draw_circle(int(size), color, i)
 
-        # 👇 STABLE TEXT (no jumping)
-        with text_container:
-            st.markdown(f"### {label}")
+        # ✅ FIXED TEXT (no stacking)
+        text_placeholder.markdown(f"### {label}")
 
         time.sleep(1)
 
@@ -110,15 +109,15 @@ if st.session_state.running:
 
     for _ in range(TOTAL_CYCLES):
 
-        # INHALE (grow)
+        # INHALE
         ok, elapsed = animate_phase(120, 220, INHALE, "Inhale", "#38bdf8", elapsed)
         if not ok: break
 
-        # HOLD (stay)
+        # HOLD
         ok, elapsed = animate_phase(220, 220, HOLD, "Hold", "#0ea5e9", elapsed)
         if not ok: break
 
-        # EXHALE (shrink)
+        # EXHALE
         ok, elapsed = animate_phase(220, 120, EXHALE, "Exhale", "#7dd3fc", elapsed)
         if not ok: break
 
@@ -127,9 +126,10 @@ if st.session_state.running:
     if not st.session_state.stop:
         progress.progress(1.0)
         draw_circle(150, "#22c55e", "✓")
+        text_placeholder.markdown("### Done")
         st.success("🌿 Done.")
 
-# 🔻 BOTTOM NAV
+# 🔻 NAVIGATION
 st.markdown("---")
 
 c1, c2, c3, c4 = st.columns(4)
