@@ -1,39 +1,59 @@
 import streamlit as st
 
-st.title("Grounding Exercise")
+st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
+# 🌊 SAME DESIGN
+st.markdown("""
+<style>
+body {
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff, #ecfeff);
+}
+.block-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 18px;
+}
+h1, h2, h3 {
+    text-align: center;
+    color: #0f172a;
+}
+p {
+    text-align: center;
+    color: #334155;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("🧘 Grounding Exercise")
+
+# STEPS
 steps = [
-    ("5 things you can see", 5),
-    ("4 things you can feel", 4),
-    ("3 things you can hear", 3),
-    ("2 things you can smell", 2),
-    ("1 thing you can taste", 1),
+    "Look around and notice **5 things you can see** 👀",
+    "Now notice **4 things you can feel** 🤲",
+    "Listen for **3 things you can hear** 👂",
+    "Notice **2 things you can smell** 👃",
+    "Focus on **1 thing you can taste or feel inside** 🌿"
 ]
 
+# SESSION
 if "g_step" not in st.session_state:
     st.session_state.g_step = 0
 
-# Current step
+
+# FLOW
 if st.session_state.g_step < len(steps):
-    question, count = steps[st.session_state.g_step]
+    st.markdown(f"### Step {st.session_state.g_step + 1}")
 
-    st.subheader(question)
+    st.write(steps[st.session_state.g_step])
 
-    inputs = []
-    valid = True
+    if st.button("Done", use_container_width=True):
+        st.session_state.g_step += 1
+        st.rerun()
 
-    for i in range(count):
-        value = st.text_input(f"Item {i+1}", key=f"{st.session_state.g_step}_{i}")
-        inputs.append(value)
-        if value.strip() == "":
-            valid = False
-
-    if valid:
-        if st.button("Next"):
-            st.session_state.g_step += 1
-            st.rerun()
-    else:
-        st.warning("Please fill all fields before continuing.")
-
+# COMPLETION
 else:
-    st.success("✨ You're grounded. Well done.")
+    st.success("🌿 You are now more grounded and present.")
+
+    if st.button("🏠 Back to Home", use_container_width=True):
+        st.session_state.clear()
+        st.switch_page("app.py")
