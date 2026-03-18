@@ -36,7 +36,7 @@ st.markdown("---")
 c1,c2,c3,c4 = st.columns(4)
 
 if c1.button("⚡", use_container_width=True):
-    st.switch_page("pages/action reset.py")
+    st.switch_page("pages/action_reset.py")
 if c2.button("🌬️", use_container_width=True):
     st.switch_page("pages/breathing.py")
 if c3.button("🌍", use_container_width=True):
