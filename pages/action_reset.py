@@ -26,7 +26,7 @@ if "task_step" not in st.session_state:
     st.session_state.task_step = 0
 
 # PROGRESS BAR
-st.progress((st.session_state.task_step + 1) / len(tasks))
+st.progress((st.session_state.task_step ) / len(tasks))
 
 # TASK FLOW
 if st.session_state.task_step < len(tasks):
