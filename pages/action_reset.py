@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.title("⚡ Reset Your State")
+st.title(" Reset Your State")
 
 tasks = [
     ("Stretch 1: Arms Up", "Raise both arms above your head and stretch upward.", 10),
@@ -9,8 +9,8 @@ tasks = [
     ("Stretch 3: Shoulder Roll", "Roll your shoulders backward slowly.", 10),
     ("Stretch 4: Forward Bend", "Bend forward and let your arms hang loose.", 10),
 
-    ("Breathing Reset", "Take slow deep breaths.", 15),
-
+    ("Breathing Reset", "Take slow deep breaths.", 30),
+    
     ("Hydrate", "Take a sip of water slowly.", 0),
 
     ("Vision Break", "Look at something far away and relax your eyes.", 10),
