@@ -24,7 +24,7 @@ p {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🧘 Grounding Exercise")
+st.title(" Grounding Exercise")
 
 # STEPS
 steps = [
