@@ -1,73 +1,85 @@
 import streamlit as st
 import time
 
-st.title(" Guided Breathing")
+st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
+
+# SAME UI STYLE
+st.markdown("""
+<style>
+body {
+    background: linear-gradient(135deg, #dbeafe, #e0f2fe, #f0f9ff);
+}
+.block-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("🌬️ Breathing Exercise")
 
 TOTAL_ROUNDS = 5
 
-# Initialize session state
 if "round" not in st.session_state:
     st.session_state.round = 1
 
-if "phase" not in st.session_state:
-    st.session_state.phase = "start"  # start / running / done
+if "running" not in st.session_state:
+    st.session_state.running = False
 
 
-# START SCREEN
-if st.session_state.phase == "start":
-    st.write(f"Ready for Round {st.session_state.round}?")
+if not st.session_state.running:
+    st.write(f"### Round {st.session_state.round}")
 
-    if st.button(f"Start Round {st.session_state.round}"):
-        st.session_state.phase = "running"
+    if st.button("Start", use_container_width=True):
+        st.session_state.running = True
         st.rerun()
 
 
-# BREATHING RUN
-elif st.session_state.phase == "running":
+def circle_timer(phase, duration):
     placeholder = st.empty()
 
-    phases = [("Inhale", 4), ("Hold", 4), ("Exhale", 6)]
+    for i in range(duration, 0, -1):
+        progress = int(((duration - i) / duration) * 360)
 
-    for phase, seconds in phases:
-        for i in range(seconds, 0, -1):
-            progress = int(((seconds - i) / seconds) * 360)
-
-            placeholder.markdown(f"""
-            <div style="text-align:center">
-                <h2>{phase}</h2>
-                <div style="
-                    width:160px;
-                    height:160px;
-                    border-radius:50%;
-                    border:10px solid #4CAF50;
-                    border-top:{progress}deg solid transparent;
-                    margin:auto;
-                "></div>
-                <h1>{i}</h1>
+        placeholder.markdown(f"""
+        <div style='text-align:center'>
+            <h2>{phase}</h2>
+            <div style='
+                width:160px;
+                height:160px;
+                border-radius:50%;
+                margin:auto;
+                background: conic-gradient(#0284c7 {progress}deg, #e2e8f0 {progress}deg);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:26px;
+                color:#0f172a;
+            '>
+                {i}
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
-            time.sleep(1)
-
-    # Round complete
-    st.session_state.phase = "done"
-    st.rerun()
+        time.sleep(1)
 
 
-# AFTER ROUND (THIS WAS MISSING PROPERLY)
-elif st.session_state.phase == "done":
-    current = st.session_state.round
-    remaining = TOTAL_ROUNDS - current
+if st.session_state.running:
+    circle_timer("Inhale", 4)
+    circle_timer("Hold", 4)
+    circle_timer("Exhale", 6)
 
-    st.success(f"✅ Round {current} complete!")
+    st.session_state.running = False
 
-    if remaining > 0:
-        st.info(f"✔ {current} done, {remaining} more to go")
-
-        if st.button(f"Start Round {current + 1}"):
+    if st.session_state.round < TOTAL_ROUNDS:
+        if st.button("Next Round", use_container_width=True):
             st.session_state.round += 1
-            st.session_state.phase = "start"
             st.rerun()
-
     else:
-        st.success("🎉 Good job completing all 5 rounds!")
+        st.balloons()
+        st.success("You completed all rounds!")
+
+        if st.button("Back Home"):
+            st.session_state.clear()
+            st.switch_page("app.py")
