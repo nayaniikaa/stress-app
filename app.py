@@ -51,9 +51,6 @@ st.markdown("""
 <p>Understand your stress. Reset your mind. Take control.</p>
 """, unsafe_allow_html=True)
 
-# ---------- OPTIONAL MUSIC ----------
-if st.toggle("🎧 Enable Calm Music"):
-    st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
 
 # ---------- SESSION ----------
 if "step" not in st.session_state:
