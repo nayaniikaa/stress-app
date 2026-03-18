@@ -51,6 +51,9 @@ st.markdown("""
 <p>Understand your stress. Reset your mind. Take control.</p>
 """, unsafe_allow_html=True)
 
+# ---------- OPTIONAL MUSIC ----------
+if st.toggle("🎧 Enable Calm Music"):
+    st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
 
 # ---------- SESSION ----------
 if "step" not in st.session_state:
@@ -166,4 +169,3 @@ elif st.session_state.step == 5:
         st.success("Best approach: Reset your state with action.")
         if st.button("Start Action Reset", use_container_width=True):
             st.switch_page("pages/action_reset.py")
-            
