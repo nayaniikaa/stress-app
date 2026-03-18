@@ -3,7 +3,7 @@ import time
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
-# 🌊 SAME OCEAN STYLE
+# 🌊 OCEAN STYLE
 st.markdown("""
 <style>
 body {
@@ -14,7 +14,7 @@ body {
     padding: 2rem;
     border-radius: 18px;
 }
-h1, h2, h3 {
+h1, h2 {
     text-align: center;
     color: #0f172a;
 }
@@ -23,62 +23,53 @@ h1, h2, h3 {
 
 st.title("🌬️ Breathing Exercise")
 
-TOTAL_ROUNDS = 5
+# SETTINGS
+CYCLES = 6
+INHALE = 10
+HOLD = 5
+EXHALE = 10
 
-# SESSION
-if "round" not in st.session_state:
-    st.session_state.round = 1
-
+# SESSION STATE
 if "running" not in st.session_state:
     st.session_state.running = False
 
 
-# START SCREEN
+# START BUTTON
 if not st.session_state.running:
-    st.write(f"### Round {st.session_state.round}")
+    st.write("### Take a deep breath. Follow the rhythm.")
 
     if st.button("Start", use_container_width=True):
         st.session_state.running = True
         st.rerun()
 
 
-# TIMER FUNCTION (TEXT ONLY)
-def run_phase(phase, seconds):
+# TIMER FUNCTION
+def run_phase(text, seconds):
     placeholder = st.empty()
 
     for i in range(seconds, 0, -1):
         placeholder.markdown(f"""
         <div style='text-align:center'>
-            <h2>{phase}</h2>
+            <h2>{text}</h2>
             <h1>{i}</h1>
         </div>
         """, unsafe_allow_html=True)
         time.sleep(1)
 
 
-# RUN FLOW
+# MAIN FLOW (CONTINUOUS)
 if st.session_state.running:
-    run_phase("Inhale", 4)
-    run_phase("Hold", 4)
-    run_phase("Exhale", 6)
+
+    for cycle in range(CYCLES):
+        run_phase("Inhale", INHALE)
+        run_phase("Hold", HOLD)
+        run_phase("Exhale", EXHALE)
 
     st.session_state.running = False
 
-    current = st.session_state.round
-    remaining = TOTAL_ROUNDS - current
+    st.balloons()
+    st.success("🌿 You completed the breathing session.")
 
-    st.success(f"✅ Round {current} complete")
-
-    if remaining > 0:
-        st.info(f"{remaining} more to go")
-
-        if st.button(f"Next Round ({current + 1})", use_container_width=True):
-            st.session_state.round += 1
-            st.rerun()
-    else:
-        st.balloons()
-        st.success("🎉 You completed all rounds!")
-
-        if st.button("🏠 Back to Home", use_container_width=True):
-            st.session_state.clear()
-            st.switch_page("app.py")
+    if st.button("🏠 Back to Home", use_container_width=True):
+        st.session_state.clear()
+        st.switch_page("app.py")
