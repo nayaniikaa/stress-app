@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("🧠 Thought Reframing")
+st.title("Thought Reframing")
 
 # User-friendly categories
 types = {
