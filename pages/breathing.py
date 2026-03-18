@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.title("🌬️ Guided Breathing")
+st.title("Guided Breathing")
 
 TOTAL_ROUNDS = 5
 
