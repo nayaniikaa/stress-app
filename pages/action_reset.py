@@ -3,7 +3,7 @@ import time
 
 st.set_page_config(layout="centered", initial_sidebar_state="collapsed")
 
-st.markdown("<h1 style='text-align:center;'>⚡ Reset Your State</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center;'> Reset Your State</h1>", unsafe_allow_html=True)
 
 # TASKS (title, instruction, duration)
 tasks = [
