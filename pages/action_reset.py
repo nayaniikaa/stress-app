@@ -21,26 +21,23 @@ h1, h2 {
 
 st.title(" Quick Reset")
 
-# 🔄 FORCE CLEAN START (fixes progress issue)
-if "initialized" not in st.session_state:
-    st.session_state.step = 0
-    st.session_state.task_done = False
-    st.session_state.initialized = True
-
-# OPTIONAL RESET BUTTON
-if st.button("🔄 Reset Session"):
-    st.session_state.clear()
-    st.rerun()
-
 tasks = [
-    ("Stretch Arms", 10),
-    ("Neck Roll", 8),
-    ("Shoulder Roll", 10),
-    ("Breathe", 10),
-    ("Hydrate", 0)
+    ("Stretch Arms",10),
+    ("Neck Roll",8),
+    ("Shoulder Roll",10),
+    ("Breathe",10),
+    ("Hydrate",0)
 ]
 
-# ✅ PROGRESS (correct logic)
+# SESSION STATE
+if "step" not in st.session_state:
+    st.session_state.step = 0
+if "running" not in st.session_state:
+    st.session_state.running = False
+if "stop" not in st.session_state:
+    st.session_state.stop = False
+
+# PROGRESS
 st.progress(st.session_state.step / len(tasks))
 
 # ---------------- TASK FLOW ----------------
@@ -49,50 +46,54 @@ if st.session_state.step < len(tasks):
 
     st.subheader(title)
 
-    # TIMER TASK
-    if duration > 0:
-        if st.button("Start", use_container_width=True):
+    # ✅ START BUTTON
+    if st.button("Start", use_container_width=True):
+        st.session_state.running = True
+        st.session_state.stop = False
+        st.rerun()
 
-            placeholder = st.empty()
+    # ✅ STOP BUTTON (RIGHT BELOW START)
+    if st.button("Stop", use_container_width=True):
+        st.session_state.stop = True
+        st.session_state.running = False
 
-            for i in range(duration, 0, -1):
-                placeholder.markdown(f"""
-                <div style='text-align:center'>
-                    <h1>⏳ {i}</h1>
-                </div>
-                """, unsafe_allow_html=True)
-                time.sleep(1)
+    # TIMER
+    if duration > 0 and st.session_state.running:
+        placeholder = st.empty()
 
-            placeholder.markdown("""
+        for i in range(duration, 0, -1):
+            if st.session_state.stop:
+                placeholder.markdown("### ⛔ Stopped")
+                break
+
+            placeholder.markdown(f"""
             <div style='text-align:center'>
-                <h2>✅ Done</h2>
+                <h1>⏳ {i}</h1>
             </div>
             """, unsafe_allow_html=True)
 
-            # ✅ Mark task complete
-            st.session_state.task_done = True
+            time.sleep(1)
 
-    # NON-TIMER TASK
-    else:
+        else:
+            placeholder.markdown("### ✅ Done")
+
+        st.session_state.running = False
+
+    # NON-TIMER
+    if duration == 0:
         if st.button("Done", use_container_width=True):
             st.success("💧 Hydrated")
-            st.session_state.task_done = True
 
-    # ✅ NEXT BUTTON (locked until done)
-    if st.button(
-        "Next →",
-        use_container_width=True,
-        disabled=not st.session_state.task_done
-    ):
+    # NEXT
+    if st.button("Next →", use_container_width=True):
         st.session_state.step += 1
-        st.session_state.task_done = False
         st.rerun()
 
 # ---------------- COMPLETION ----------------
 else:
     st.success("🔥 Reset done")
 
-# ---------------- BOTTOM NAV ----------------
+# ---------------- NAV ----------------
 st.markdown("---")
 
 c1, c2, c3, c4 = st.columns(4)
